@@ -65,7 +65,11 @@ def start_worker(device_id: int, port: int) -> subprocess.Popen:
     env["COMMANDLINE_ARGS"] = ""
 
     info(f"Starting worker GPU {device_id} on port {port} ...")
-    return subprocess.Popen(cmd, cwd=root, env=env)
+    return subprocess.Popen(
+        cmd, cwd=root, env=env,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
 
 
 def wait_for_worker(port: int, timeout: int = 180) -> bool:
