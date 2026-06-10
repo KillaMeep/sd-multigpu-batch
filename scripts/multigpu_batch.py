@@ -12,6 +12,7 @@ if _ext_root not in sys.path:
     sys.path.insert(0, _ext_root)
 
 import modules.processing as _processing_module
+import modules.script_callbacks as script_callbacks
 import modules.scripts as scripts
 
 from multigpu_lib.dispatcher import dispatch_all
@@ -204,6 +205,28 @@ def _multigpu_process_images(p, *args, **kwargs):
 
 # Apply patch
 _processing_module.process_images = _multigpu_process_images
+
+
+def _on_model_loaded(_model):
+    """Fires when the primary loads a new model. Proactively sync to all live workers."""
+    ready = [
+        w for w in _workers.values()
+        if w.get("ready") and w["process"].poll() is None
+    ]
+    if not ready:
+        return
+
+    def _sync():
+        for w in ready:
+            info(f"Model changed — syncing to worker on port {w['port']}...")
+            sync_model_to_worker(w["port"])
+            ok(f"Worker on port {w['port']} synced to new model.")
+
+    threading.Thread(target=_sync, daemon=True).start()
+
+
+script_callbacks.on_model_loaded(_on_model_loaded)
+
 
 ok(
     f"Extension loaded — {_cuda_device_count()} CUDA device(s) detected. "
