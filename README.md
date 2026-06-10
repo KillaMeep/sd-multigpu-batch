@@ -39,7 +39,7 @@ Seeds are assigned to preserve the same sequence you would have gotten from a si
 
 ```bash
 cd <a1111_root>/extensions
-https://github.com/KillaMeep/sd-multigpu-batch
+git clone https://github.com/KillaMeep/sd-multigpu-batch
 ```
 
 Restart A1111. No additional `pip install` is needed.
