@@ -186,6 +186,14 @@ def _multigpu_process_images(p, *args, **kwargs):
     _stop_progress.set()
     _progress_thread.join(timeout=2)
 
+    # All GPUs finished — guarantee the bar reaches 100% regardless of poll timing.
+    try:
+        from modules import shared as _shared
+        if _shared.state.job_count > 0:
+            _shared.state.job_no = _shared.state.job_count
+    except Exception:
+        pass
+
     if results[0] is None:
         raise RuntimeError("[MULTIGPU] Primary GPU (GPU 0) generation failed.")
 
