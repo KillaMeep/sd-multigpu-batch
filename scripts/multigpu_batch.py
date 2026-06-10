@@ -116,9 +116,24 @@ def _aggregate_progress(worker_ports: list, total_n_iter: int, stop_event):
             break
         time.sleep(0.02)
 
-    # Poll remote workers and advance job_no as they complete iterations
+    def _interrupt_workers(endpoint: str):
+        for port in remote_ports:
+            try:
+                requests.post(f"http://127.0.0.1:{port}/sdapi/v1/{endpoint}", timeout=2)
+            except Exception:
+                pass
+
+    # Poll remote workers: advance progress and mirror interrupt/skip signals.
     while not stop_event.is_set():
-        time.sleep(0.5)
+        time.sleep(0.25)
+
+        # Mirror interrupt / skip / stop to all remote workers immediately.
+        if shared.state.interrupted or getattr(shared.state, "stopping_generation", False):
+            _interrupt_workers("interrupt")
+            break
+        if shared.state.skipped:
+            _interrupt_workers("skip")
+
         for port in remote_ports:
             try:
                 r = requests.get(
