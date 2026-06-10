@@ -52,8 +52,6 @@ Restart A1111. No additional `pip install` is needed.
 4. *(Optional)* Click **Pre-warm Workers** to start the worker process now — otherwise it starts on the first generation and adds a one-time 30–90 s startup delay
 5. Generate as normal
 
-![UI screenshot placeholder](docs/screenshot.png)
-
 ### Worker status
 
 The status box in the accordion shows whether each worker is ready. Workers stay alive across generations and are shut down automatically when A1111 exits.
