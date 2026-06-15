@@ -1,6 +1,6 @@
-# Multi-GPU Batch — AUTOMATIC1111 Extension
+# Multi-GPU Batch - AUTOMATIC1111 Extension
 
-Transparently splits image generation across multiple GPUs. You submit a normal txt2img or img2img request; the extension divides the work across all selected GPUs, runs them in parallel, and returns a single merged result — no change to your normal workflow.
+Transparently splits image generation across multiple GPUs. You submit a normal txt2img or img2img request; the extension divides the work across all selected GPUs, runs them in parallel, and returns a single merged result - no change to your normal workflow.
 
 ## How it works
 
@@ -49,7 +49,7 @@ Restart A1111. No additional `pip install` is needed.
 1. Open the **Multi-GPU Batch** accordion (always visible on txt2img and img2img tabs)
 2. Check **Enable Multi-GPU splitting**
 3. Select the worker GPUs you want to use (GPU 0 always runs locally)
-4. *(Optional)* Click **Pre-warm Workers** to start the worker process now — otherwise it starts on the first generation and adds a one-time 30–90 s startup delay
+4. *(Optional)* Click **Pre-warm Workers** to start the worker process now - otherwise it starts on the first generation and adds a one-time 30–90 s startup delay
 5. Generate as normal
 
 ### Worker status
@@ -72,12 +72,12 @@ The extension logs all activity to the server console, colour-coded:
 Example:
 
 ```
-[MULTIGPU] Extension loaded — 2 CUDA device(s) detected. process_images patched.
+[MULTIGPU] Extension loaded - 2 CUDA device(s) detected. process_images patched.
 [MULTIGPU] Distributing 4 image(s) across 2 GPU(s):
 [MULTIGPU]   GPU 0 (local): 2 iter(s) × batch 1  seed=1234567890
 [MULTIGPU]   GPU 1 (port 34521): 2 iter(s) × batch 1  seed=1234567892
-[MULTIGPU] Dispatching — all GPUs running in parallel...
-[MULTIGPU] Done — merged 4 image(s) from 2 GPU(s).
+[MULTIGPU] Dispatching - all GPUs running in parallel...
+[MULTIGPU] Done - merged 4 image(s) from 2 GPU(s).
 ```
 
 ## Configuration
@@ -89,7 +89,7 @@ The model and key options (`sd_model_checkpoint`, `sd_vae`, `CLIP_stop_at_last_l
 ## Known limitations
 
 - **Grid images are suppressed.** Each GPU generates its sub-batch without a grid; no merged grid is regenerated. You get individual images only.
-- **Extensions on workers.** Workers are headless API processes — no other extensions run on them. If another extension modifies generation (e.g. a custom sampler), workers won't have it.
+- **Extensions on workers.** Workers are headless API processes - no other extensions run on them. If another extension modifies generation (e.g. a custom sampler), workers won't have it.
 - **img2img.** The dispatcher payload builder does not yet include `init_images`, so img2img will fall back to single-GPU.
 - **First-run latency.** The first generation after a cold start waits ~30–90 s for the worker to load the model. Pre-warm to avoid this.
 - **Single machine only.** Workers are spawned as local subprocesses; distributed/networked setups are not supported.
@@ -99,7 +99,7 @@ The model and key options (`sd_model_checkpoint`, `sd_vae`, `CLIP_stop_at_last_l
 ```
 extensions/multigpu-batch/
   scripts/
-    multigpu_batch.py       # A1111 Script class — UI + process_images patch
+    multigpu_batch.py       # A1111 Script class - UI + process_images patch
   multigpu_lib/
     worker_manager.py       # Subprocess lifecycle, health check, model sync
     dispatcher.py           # Parallel dispatch via ThreadPoolExecutor
